@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+
+{% load wagtailcore_tags %}
+
+{% block body_class %}template-blogpage{% endblock %}
+
+{% block content %}
+    <h1>{{ config.title }}</h1>
+    <h2>{{ config.intro_title }}</h2>
+    {{ config.intro_copy | safe }}
+
+    <form>
+    {% for question in questions %}
+        <b>{{ question.body | safe }}</b><br/>
+        {% if question.type == 'single select' %}
+            {% for answer in question.answers %}
+            <input type="radio" name="{{ question.body }}">
+                {{ answer.body }}
+            </input><br/>
+            {% endfor %}
+        {% endif %}
+        <br/><br/>
+    {% endfor %}
+    </form>
+
+    <p><a href="{{ page.get_parent.url }}">Return to blog</a></p>
+
+{% endblock %}
