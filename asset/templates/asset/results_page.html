@@ -1,0 +1,24 @@
+{% load wagtailcore_tags %}
+{% load form_extras %}
+<html>
+    <head>
+        <title>{{ page.title }}</title>
+    </head>
+    <body>
+        {% for result_section in result_sections %}
+            {% for progress_bar in result_section.progress_bars %}
+            <h2>{{ progress_bar.text }} {{ result_section.result_points }}.</h2>
+            <progress id="progress_{{ result_section }}" value="{{ result_section.result_points }}" min="{{ progress_bar.min }}" max="{{ progress_bar.max }}"></progress><br/>
+            {% endfor %}
+            {% for result in result_section.results %}
+                {{ result | safe }}
+            {% endfor %}
+            {% for result_item in result_section.result_items %}
+                <p>{{ result_item | safe }}</p>
+            {% endfor %}
+        {% endfor %}
+        {% for link_item in link_items %}
+            {{ link_item | format_link | safe }}<br/>
+        {% endfor %}
+    </body>
+</html>

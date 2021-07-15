@@ -7,6 +7,9 @@ name = "pypi"
 Django = "<3.3,>=3.2"
 wagtail = "<2.14,>=2.13"
 psycopg2-binary = "*"
+libsass = "*"
+django-compressor = "*"
+django-sass-processor = "*"
 
 [dev-packages]
 

@@ -1,0 +1,24 @@
+{
+  "name": "antbits",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ColinBeeby-Developer/antbits.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ColinBeeby-Developer/antbits/issues"
+  },
+  "homepage": "https://github.com/ColinBeeby-Developer/antbits#readme",
+  "dependencies": {
+    "nhsuk-frontend": "^5.1.0",
+    "nunjucks": "^3.2.3"
+  }
+}

@@ -1,0 +1,37 @@
+{% load wagtailcore_tags %}
+{% load form_extras %}
+<html>
+    <head>
+        <title>{{ page.title }}</title>
+    </head>
+    <body>
+        {% if fields_step.number == 0 %}
+        <form action="{% pageurl page %}?p=1" method="POST">
+            {% csrf_token %}
+            {{ page.intro | richtext}}
+            <input type="submit">
+        </form>
+        {% endif %}
+        {% if fields_step.number > 0 %}
+        <form action="{% pageurl page %}?p={{ fields_step.number|add:"1" }}" method="POST">
+            {% csrf_token %}
+            {% for field in form.visible_fields %}
+                <div class="nhsuk-hint" id="question_number">Question {{ fields_step.number }} of {{ total_questions }}</div>
+                {{ field.label_tag }}
+                <p>{{ field.help_text | safe}}</p>
+                <ul id="id_{{ field.name }}">
+                    {% for radio in field %}
+                    <li>
+                        <label for="{{ radio.data.attrs.id }}">
+                            <input type="{{ radio.data.type }}" name="{{ radio.data.name }}" value="{{ radio.data.value }}" {% if radio.data.type == 'radio' %}required{% endif %} id="{{ radio.data.attrs.id }}">
+                            {{ radio.data.value | get_value }}
+                        </label>
+                    </li>
+                    {% endfor %}
+            {% endfor %}
+            </ul>
+            <input type="submit">
+        </form>
+        {% endif %}
+    </body>
+</html>

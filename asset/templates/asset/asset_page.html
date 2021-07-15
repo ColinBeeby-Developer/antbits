@@ -19,7 +19,12 @@
             </input><br/>
             {% endfor %}
         {% endif %}
-        {% if question.type == 'other' %}
+        {% if question.type == 'multiple select' %}
+            {% for answer in question.answers %}
+            <input type="checkbox">
+                {{ answer.body }}
+            </input><br/>
+            {% endfor %}
         {% endif %}
         <br/><br/>
     {% endfor %}
