@@ -28,6 +28,7 @@ INSTALLED_APPS = [
     'search',
     'asset',
     'testapp',
+    'questionnaire',
 
     'wagtail.contrib.forms',
     'wagtail.contrib.redirects',

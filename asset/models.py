@@ -269,31 +269,22 @@ class ResultsPage(Page):
         scores = {}
         
         for answer in form_data:
-            if isinstance(form_data[answer], list):
-                for answer_part in form_data[answer]:
-                    self.process_answer(answer_part, scores)
-            else:
-                self.process_answer(form_data[answer], scores)
+            for action in form_data[answer]:
+                self.process_action(action, scores)
           
         return scores
 
-    def process_answer(self, answer, scores):
+    def process_action(self, action, scores):
         valid_operations = {'points': self.points,
                             'result': self.result,
                             'link': self.link,
-                            'set variable': self.set_variable}
-        if '~' not in answer:
-            return
-        answer_value = answer.split('~')[1]
-        for part in answer_value.split('|'):
-            operator, type_name, sub_type_name, value = part.split('#') 
-            if not value:
-                value = '0'
-            try:
-                valid_operations[type_name](operator, sub_type_name, value, scores)
-            except:
-                # attempt to call an unknown operations
-                continue
+                            'set variable': self.set_variable,
+                            'unknown': self.unknown_type}
+        try:
+            valid_operations[action.get('type', 'unknown')](action['operator'], action.get('sub_type'), action['value'], scores)
+        except:
+            # TODO - need to do something for an invalid operations
+            pass
 
     def points(self, operator, sub_type_name, value, scores):
         if operator == '+':
@@ -321,3 +312,7 @@ class ResultsPage(Page):
             current_variable_value = scores.get(sub_type_name, 0)
             current_variable_value += int(value)
             scores[sub_type_name] = current_variable_value
+
+    def unknown_type(self, operator, sub_type_name, value, scores):
+        # TODO decide what we need to do for an unknown action type
+        pass

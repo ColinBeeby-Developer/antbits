@@ -1,0 +1,47 @@
+{% load wagtailcore_tags %}
+{% load form_extras %}
+<html>
+    <head>
+        <title>{{ page.title }}</title>
+    </head>
+    <body>
+        {% if fields_step.number == 0 %}
+        <form action="{% pageurl page %}?p=1" method="POST">
+            {% csrf_token %}
+            {{ page.introduction_text | richtext}}
+            <input type="submit">
+        </form>
+        {% endif %}
+        {% if fields_step.number > 0 %}
+        <form action="{% pageurl page %}?p={{ fields_step.number|add:"1" }}" method="POST">
+            {% csrf_token %}
+            <div class="nhsuk-hint" id="question_number">Question {{ fields_step.number }} of {{ total_questions }}</div>
+            <p>{{ form.question_text | safe}}</p>
+            {% if form.info_box_name %}
+                <p>{{ form.info_box_name }}</p>
+            {% endif %}
+            <ul>
+                {% for answer in form.answers %}
+                {% if form.question_type == 'single select' %}
+                <li>
+                    <label for="radio_{{ answer.answer_id }}">
+                        <input type="radio" name="answer" value="{{ answer.answer_text }}" required id="radio_{{ answer.answer_id }}">
+                        {{ answer.answer_text }}
+                    </label>
+                </li>
+                {% endif %}
+                {% if form.question_type == 'multiple select' %}
+                <li>
+                    <label for="check_{{ answer.answer_id }}">
+                        <input type="checkbox" name="answer" value="{{ answer.answer_text }}" id="check_{{ answer.answer_id }}">
+                        {{ answer.answer_text }}
+                    </label>
+                </li>
+                {% endif %}
+                {% endfor %}
+            </ul>
+            <input type="submit">
+        </form>
+        {% endif %}
+    </body>
+</html>

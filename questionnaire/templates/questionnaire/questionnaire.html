@@ -1,0 +1,37 @@
+{% load wagtailcore_tags %}
+{% load sass_tags %}
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>{{ page.title }}</title>
+        <link rel="stylesheet" type="text/css" href="{% sass_src 'css/questionnaire.scss' %}">
+        <script src="node_modules/nhsuk-frontend/dist/nhsuk.min.js" defer></script>
+        <link rel="shortcut icon" href="node_modules/nhsuk-frontend/assets/favicons/favicon.ico" type="image/x-icon">
+        <link rel="apple-touch-icon" href="node_modules/nhsuk-frontend/assets/favicons/apple-touch-icon-180x180.png">
+        <link rel="mask-icon" href="node_modules/nhsuk-frontend/assets/favicons/favicon.svg" color="#005eb8">
+        <link rel="icon" sizes="192x192" href="node_modules/nhsuk-frontend/assets/favicons/favicon-192x192.png">
+        <meta name="msapplication-TileImage" content="node_modules/nhsuk-frontend/assets/favicons/mediumtile-144x144.png">
+        <meta name="msapplication-TileColor" content="#005eb8">
+        <meta name="msapplication-square70x70logo" content="node_modules/nhsuk-frontend/assets/favicons/smalltile-70x70.png">
+        <meta name="msapplication-square150x150logo" content="node_modules/nhsuk-frontend/assets/favicons/mediumtile-150x150.png">
+        <meta name="msapplication-wide310x150logo" content="node_modules/nhsuk-frontend/assets/favicons/widetile-310x150.png">
+        <meta name="msapplication-square310x310logo" content="node_modules/nhsuk-frontend/assets/favicons/largetile-310x310.png">
+    </head>
+    <body>
+        {% if question_number > 0 and question_number < total_questions %}
+        Question {{ question_number }} of {{ total_questions }}
+        {% endif %}
+        <form action="{% pageurl page %}?p={{ next_step }}" method="POST">
+            {% csrf_token %}
+            {{ questionnaire_elements | safe }}
+            {% if question_number == 0 %}
+            <input type="submit" value="Start">
+            {% else %}
+            <a href="{% pageurl page %}?p={{ prev_step }}">Back</a>
+            <input type="submit" value="Next">
+            {% endif %}
+            
+        </form>
+    </body>
+</html>
