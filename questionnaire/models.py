@@ -30,6 +30,7 @@ class Questionnaire(Page):
         context['question_number'] = next_step_number
         context['total_questions'] = len(session_data.get('data', {}).get('questions', []))
         context['questionnaire_elements'] = self.get_questionnaire_elements(next_step_number, session_data, current_step_number)
+        context['footer_elements'] = self.get_footer_elements(current_step_number, session_data.get('data', {}).get('config'))
         context['next_step'] = next_step_number + 1
         context['prev_step'] = current_step_number
 
@@ -62,11 +63,21 @@ class Questionnaire(Page):
         return questionnaire_elements
 
     @staticmethod
+    def get_footer_elements(current_step_number, config_data):
+        footer_elements = ''
+        if current_step_number == -1:
+            if config_data.get('intro_foot_title'):
+                footer_elements = '<div><details style="display:inline;"><summary>{}</summary>{}</details></div>'.format(config_data.get('intro_foot_title'), config_data.get('intro_foot'))
+        
+        return footer_elements
+
+    @staticmethod
     def create_intro(data):
         """ Create the markup for the introduction page of the quesionnaire """
         elements = '<h1>{}</h1>'.format(data['config']['title'])
         elements += '<h2>{}</h2>'.format(data['config']['intro_title'])
         elements += data['config']['intro_copy']
+
         return elements
 
     @classmethod
@@ -96,8 +107,8 @@ class Questionnaire(Page):
         elements = '<div class="nhsuk-radios">'
         answer_index = 0
         for answer in question['answers']:
-            elements += '<div class="nhsuk-radios__items">'
-            elements += '<input type="radio" name="answer" value="{}" required id="radio_{}">'.format(answer['body'], answer_index)
+            elements += '<div class="nhsuk-radios__item">'
+            elements += '<input class="nhsuk-radios__input" type="radio" name="answer" value="{}" required id="radio_{}">'.format(answer['body'], answer_index)
             elements += '<label class="nhsuk-label nhsuk-radios__label" for="radio_{}">{}</label>'.format(answer_index, answer['body'])
             elements += '</div>'
             answer_index += 1
@@ -110,9 +121,9 @@ class Questionnaire(Page):
         elements = '<div class="nhsuk-checkboxes">'
         answer_index = 0
         for answer in question['answers']:
-            elements += '<div class="nhsuk-checkboxes__items">'
-            elements += '<input type="checkbox" name="answer" value="{}" id="checkbox_{}">'.format(answer['body'], answer_index)
-            elements += '<label nhsuk-label nhsuk-checkboxes__label" for="checkbox_{}">{}</label>'.format(answer_index, answer['body'])
+            elements += '<div class="nhsuk-checkboxes__item">'
+            elements += '<input class="nhsuk-checkboxes__input" type="checkbox" name="answer" value="{}" id="checkbox_{}">'.format(answer['body'], answer_index)
+            elements += '<label class="nhsuk-label nhsuk-checkboxes__label" for="checkbox_{}">{}</label>'.format(answer_index, answer['body'])
             elements += '</div>'
             answer_index += 1
         elements += "</div>"
@@ -193,8 +204,16 @@ class Questionnaire(Page):
             bar_value = results.points
         else:
             bar_value = results.variables.get(result['p3'], 0)
-        elements = '<h2>{} {}</h2>'.format(result['text'], bar_value)
-        elements += '<progress id="progress_{}" value="{}" min="{}" max="{}"></progress><br/>'.format(index, bar_value, result['p1'], result['p2'])
+        elements = '<div style="width:100%">'
+        elements += '<h2>{} {}</h2>'.format(result['text'], bar_value)
+        elements += '<progress id="progress_{}" value="{}" min="{}" max="{}" style="width:100%;height:3em"></progress><br/>'.format(index, bar_value, result['p1'], result['p2'])
+        elements += '<table style="margin:0">'
+        elements += '<tr>'
+        elements += '<td style="border:0;padding:0">{}</td><td style="text-align:right;border:0;padding:0">{}</td>'.format(result['p1'], result['p2'])
+        elements += '<tr>'
+        elements += '</table>'
+        elements += '</br>'
+        elements += '</div>'
         return elements
 
     @staticmethod
@@ -214,7 +233,7 @@ class Questionnaire(Page):
         if variable_value == -1:
             return elements
         if variable_value >= int(result['p1']) and variable_value <= int(result['p2']):
-            elements += '{}</br></br>'.format(result['text'])
+            elements += '<p>{}</p>'.format(result['text'])
         return elements
           
     @staticmethod
@@ -246,6 +265,7 @@ class Questionnaire(Page):
     @staticmethod
     def add_links(data, results):
         """ Add links elements """
+        elements = ''
         for link in results.links:
             text = ''
             for link_item in data['link_items']:
@@ -264,7 +284,11 @@ class Questionnaire(Page):
         elements = ''
         for info_box in data.get('info_boxes'):
             if info_box['id'] == info_box_id:
-                elements += '<details style="display:inline;"><summary>{}</summary>{}</details>'.format(info_box['title'], info_box['body'])
+                elements += '<details class="nhsuk-details">'
+                elements += '<summary class="nhsuk-details__summary" role="button">'
+                elements += '<span class="nhsuk-details__summary-text">{}</span>'.format(info_box['title'])
+                elements += '</summary>'
+                elements += '<div class="nhsuk-details__text">{}</div></details>'.format(info_box['body'])
         return elements
 
 

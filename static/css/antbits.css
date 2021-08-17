@@ -5828,5 +5828,62 @@ b {
       background: none;
       color: #212b32;
       top: 0; } }
+/* ==========================================================================
+   APP COMPONENTS / #EMERGENCY-ALERT
+   ========================================================================== */
+/**
+ * 1. Use inverted link colours due to the yellow
+ *    ($color_nhsuk-yellow) background.
+ */
+.app-global-alert {
+  background-color: #ffeb3b;
+  padding-bottom: 24px;
+  padding-top: 24px; }
+  @media print {
+    .app-global-alert {
+      display: none; } }
+  .app-global-alert a {
+    color: #005eb8;
+    /* [1] */ }
+    .app-global-alert a:focus {
+      background-color: #003d78;
+      box-shadow: 0 0 0 4px #003d78;
+      color: #ffffff;
+      outline: 4px solid transparent;
+      outline-offset: 4px; }
+    .app-global-alert a:hover {
+      background-color: #005eb8;
+      box-shadow: 0 0 0 4px #005eb8;
+      color: #ffffff; }
+    .app-global-alert a:active {
+      background-color: #002f5c;
+      box-shadow: 0 0 0 4px #003d78;
+      color: #ffffff; }
+
+.app-global-alert__content {
+  position: relative; }
+  .app-global-alert__content > *:first-child {
+    margin-top: 0; }
+  .app-global-alert__content > *:last-child {
+    margin-bottom: 0; }
+
+.app-global-alert__message h2,
+.app-global-alert__message h3 {
+  font-size: 24px;
+  line-height: 1.33333;
+  margin: 0; }
+
+.app-global-alert__message p {
+  margin-top: 8px;
+  display: block;
+  font-size: 16px;
+  line-height: 1.5;
+  margin-bottom: 0; }
+  @media (min-width: 40.0625em) {
+    .app-global-alert__message p {
+      margin-top: 8px; } }
+  @media (min-width: 40.0625em) {
+    .app-global-alert__message p {
+      font-size: 19px; } }
 
 /*# sourceMappingURL=antbits.css.map */
